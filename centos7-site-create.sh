@@ -1,5 +1,8 @@
 #!/bin/bash
-
+#################################################
+#Flung together by Steven Clark
+#email: stevie@get-geeky.co.uk
+#################################################
 #################################################
 #Script input check for the correct number of
 #arguments to process
