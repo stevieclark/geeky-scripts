@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#################################################
+#Script input check for the correct number of
+#arguments to process
+#################################################
+if [ "$#" -ne 3 ]; then
+    echo "usage = <domain.tld> <username> <password>"
+    exit 1
+fi
+
 ##################################################
 #Config checks, handy for first time installations
 ##################################################
