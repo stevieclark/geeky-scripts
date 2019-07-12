@@ -1,5 +1,8 @@
 #!/bin/bash
-
+######################################################
+#Flung together by Steven Clark
+#email: stevie@get-geeky.co.uk
+######################################################
 ######################################################
 #Script input check for the correct number of
 #               arguments to process
@@ -52,3 +55,5 @@ usermod -d /var/www/html/$name/ $2
 #                       user.
 #######################################################
 cp /var/www/html/readme.html /var/www/html/$name/www/.
+
+chown -R $2:www-data /var/www/html/$name/
