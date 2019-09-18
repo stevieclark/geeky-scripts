@@ -1,0 +1,65 @@
+
+#!/bin/bash
+
+#################################################
+#Script input check for the correct number of
+#arguments to process
+#################################################
+#if [ "$#" -ne 3 ]; then
+ #   echo "usage = <domain.tld> <username> <password>"
+ #   exit 1
+#fi
+
+#################################################
+
+#Config checks, handy for first time installations
+##################################################
+
+#checks if the httpd.conf has the appropriate line included to enable virtual hosts
+grep -qF "include /etc/nginx/conf.d/sites-enabled/*.conf;" /etc/nginx/nginx.conf
+if
+        [[ $? != 0 ]]; then echo -e "\nErr: Please add the following line to /etc/nginx/nginx.conf;\n'include /etc/nginx/conf.d/sites-enabled/*.conf;\n"
+        exit 1
+fi
+
+#creates virtual hosts directories
+mkdir -p /etc/nginx/conf.d/sites-available
+mkdir -p /etc/nginx/conf.d/sites-enabled
+
+###################################################
+
+name=$1
+mkdir -p /var/www/html/$name/www
+root=/var/www/html/$name/www
+email='webmaster@localhost'
+sitesEnable='/etc/nginx/conf.d/sites-enabled/'
+sitesAvailable='/etc/nginx/conf.d/sites-available/'
+sitesAvailabledomain=$sitesAvailable$name.conf
+
+echo "Creating a vhost for $sitesAvailabledomain with a webroot $WEB_ROOT_DIR"
+
+echo "
+        server {
+    listen  80;
+    server_name $name www.$name;
+
+    location / {
+        root  /var/www/html/$name/www;
+        index  index.html index.htm;
+    }
+
+    error_page  500 502 503 504  /50x.html;
+    location = /50x.html {
+        root  /usr/share/nginx/html;
+    }
+}" > $sitesAvailabledomain
+
+ln -s /etc/nginx/conf.d/sites-available/$name.conf /etc/nginx/conf.d/sites-enabled/
+
+useradd $2
+echo "$2:$3" | chpasswd
+usermod -d /var/www/html/$name/ $2
+
+#cp /var/www/html/readme.html /var/www/html/$name/www/
+
+chown -R $2:nginx /var/www/html/$name/
